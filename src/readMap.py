@@ -1,7 +1,8 @@
 import shapefile
 from matplotlib import pyplot as plt
+import geopandas as gpd
 
-shpFilePath='../shapefile/crime_dt.shp'
+shpFilePath='../shape_file/crime_dt.shp'
 
 shape = shapefile.Reader(shpFilePath, encoding='ISO-8859-1')
 shapeRecords = shape.shapeRecords()
@@ -11,5 +12,7 @@ for i in range(len(shapeRecords)):
     y = shapeRecords[i].shape.__geo_interface__["coordinates"][1]
     plt.plot(x, y)
 
+
 plt.show()
-#print(shapeRecords)
+for i in range(10):
+    print(shapeRecords[i].shape.__geo_interface__['coordinates'])
