@@ -20,24 +20,31 @@ Y0, Y1 = 45.49, 45.53
 x_axis = np.arange(X0, X1 + grid_size/2, grid_size)
 y_axis = np.arange(Y0, Y1 + grid_size/2, grid_size)
 # Create a 2d histogram to collect criminals
-crim_data, _, _ = np.histogram2d(Y, X, [y_axis, x_axis])
+crim_data, xedges, yedges = np.histogram2d(Y, X, [y_axis, x_axis])
 # Compute the average
 mean = np.mean(crim_data)
 # Compute the standard deviation
 std = np.std(crim_data)
+print(mean, std)
 # Covert the 2d array to a linear array, and sort in descending order
 linear_crim = np.sort(crim_data.flatten())[::-1]
 # Get the value compouted with threshold
-threshold = 90
+threshold = 75
 thre_ele = linear_crim[int(np.floor(len(linear_crim) * (100-threshold) / 100 -1))]
 
 # Transfer the elements to binary value according to the threshokld value
 crim_data_binary = (crim_data >= thre_ele).astype(int)
-plt.imshow(crim_data_binary, extent=[X0, X1, Y0, Y1], origin='lower')
 #plt.pcolor(x_axis, y_axis, crim_data_binary)
+plt.imshow(crim_data_binary, extent=[X0, X1, Y0, Y1], origin='lower')
+#x_ticks = np.arange(X0, X1 + grid_size * 5/2, grid_size*5)
+#y_ticks = np.arange(Y0, Y1 + grid_size * 5/2, grid_size*5)
+#plt.xticks(x_axis)
+#plt.yticks(y_axis)
+#plt.grid(b= True, which='both')
+
 grid_path = '../images/grids/grids_size' + str(grid_size)+ '_threshold' +str(threshold/100) + '.png'
 plt.savefig(grid_path)
-# plt.show()
+plt.show()
 
 '''
 # Combine X and Y
@@ -54,6 +61,3 @@ for i in range(size):
                     D[j][k] += 1
 print(D)
 '''
-
-
-origin = []
