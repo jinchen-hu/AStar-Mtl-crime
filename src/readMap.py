@@ -1,4 +1,3 @@
-import shapefile
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np
@@ -21,19 +20,24 @@ Y0, Y1 = 45.49, 45.53
 x_axis = np.arange(X0, X1 + grid_size/2, grid_size)
 y_axis = np.arange(Y0, Y1 + grid_size/2, grid_size)
 # Create a 2d histogram to collect criminals
-crim_data, x_edges, y_edges = np.histogram2d(X, Y, [x_axis, y_axis])
+crim_data, x_edges, y_edges = np.histogram2d(Y, X, [y_axis, x_axis])
 # Compute the average
 mean = np.mean(crim_data)
 # Compute the standard deviation
 std = np.std(crim_data)
 # Covert the 2d array to a linear array, and sort in descending order
 linear_crim = np.sort(crim_data.flatten())[::-1]
-print(linear_crim)
+#print(linear_crim)
 # Get the threshold index
-index = int(np.floor(len(linear_crim) * (100-89) / 100 -1))
-print(linear_crim[index])
-print(linear_crim[43])
+index = int(np.floor(len(linear_crim) * (100-75) / 100 -1))
+var = linear_crim[index]
+print(var)
 
+arr = (crim_data >= var).astype(int)
+print(arr)
+
+plt.imshow(arr,origin='lower', extent=[X0, X1, Y0, Y1], interpolation='nearest', aspect='auto')
+plt.show()
 
 
 
