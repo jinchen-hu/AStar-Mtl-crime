@@ -1,8 +1,20 @@
 import readMap as rm
 import numpy as np
 import aStar
+import signal
 
 
+# Define a timeout exception
+class TimeOutException(Exception):
+    pass
+
+
+# Define a exception handler
+def signal_handler(signum, frame):
+    raise TimeOutException('Time is up. The optimal path is not found.')
+
+
+# Prompt the user input the grid size
 def read_grid_size():
     while True:
         grid_size = eval(input('Please enter the grid size ( <= 0.002 is recommended): '))
@@ -12,6 +24,7 @@ def read_grid_size():
             print('Invalid input! ')
 
 
+# Prompt the user input threshold
 def read_threshold():
     while True:
         threshold = eval(input('Please enter the threshoud ( 0~100 ): '))
@@ -21,10 +34,12 @@ def read_threshold():
             print('Invalid input! ')
 
 
+# Prompt the user enter the starting point and end point
 def read_start_end(boundaries, grid_size):
     while True:
         print('Please enter the starting point and destination')
         print('Input Format:  Longitude (-73.59~-73.55), Latitude (45.49~45.53)')
+
         # Get the start point
         def get_start():
             while True:
@@ -34,6 +49,7 @@ def read_start_end(boundaries, grid_size):
                 else:
                     print('The point you input is out of the boundary')
         # Get the end point
+
         def get_end():
             while True:
                 end = eval(input('Please enter the destination: '))
@@ -47,7 +63,7 @@ def read_start_end(boundaries, grid_size):
         long, lat = rm.get_tickers(boundaries, grid_size)
         # Traverse the long array and lat array, find the proper indices
         # for starting point and end point respectively
-        h0, h1, w1, w2, llat, llong = 0, 0, 0, 0, len(lat), len(long)
+        h0, h1, w0, w1, llat, llong = 0, 0, 0, 0, len(lat), len(long)
         if start_point[1] == round(lat[llat-1], 10):
             h0 = llat-1
         else:
@@ -76,7 +92,7 @@ def read_start_end(boundaries, grid_size):
                 if round(long[w1], 10) <= end_point[0] < round(long[w1+1], 10):
                     break
 
-        if h0 == h1 and w1 == w2:
+        if h0 == h1 and w0 == w1:
             print('Starting point is same as destination. Please input again')
             continue
         else:
@@ -84,8 +100,6 @@ def read_start_end(boundaries, grid_size):
             print('The starting point and end point you chose (if not a intersection point, change it to the lowest point): ')
             print(str([round(long[w0],10), round(lat[h0], 10)]) + ' ---> ' + str( [round(long[w1], 10),round(lat[h1], 10)]))
             return [h0, w0], [h1, w1]
-
-
 
 
 def run():
@@ -106,9 +120,20 @@ def run():
     print('***********************************************************\n')
 
     start_index, end_index = read_start_end(boundaries, grid_size)
-    path = np.array(aStar.astar_search(crim_data, start_index, end_index), dtype=float)
+    path = []
+
+    try:
+        # Set the signal, and time limit to 10s
+        signal.signal(signal.SIGALRM, signal_handler)
+        signal.alarm(10)
+
+        path = np.array(aStar.astar_search(crim_data, start_index, end_index), dtype=float)
+    except TimeOutException as message:
+        print('Time us up. The optimal path is not found')
 
     if len(path) > 0:
+        # Cancel the signal
+        signal.alarm(0)
         xs, ys = rm.get_tickers(boundaries, grid_size)
         x_axis = np.array(path[:, 1], dtype=float)
         y_axis = np.array(path[:, 0], dtype=float)
@@ -118,8 +143,8 @@ def run():
             y_axis[i] = ys[int(y_axis[i])]
 
         rm.show_grids(crim_data, boundaries, grid_size, threshold, path=[x_axis,y_axis])
-
-    print('\n\n### Thanks very much for using our application. The program will terminate right now')
+    print('\n\n###########################################################################################')
+    print('\n### Thanks very much for using our application. The program will terminate right now ###')
 
 
 run()
