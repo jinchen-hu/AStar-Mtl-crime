@@ -79,6 +79,7 @@ def astar_search(crim_data, start, goal):
             # Set parent node to current point
             child_node.parent = current_node
             # Add it to the open list
+            child_node.isopen = True
             open_set.add(child_node)
 
     # Compute the path weight moving to the next point, return false if the path will cross through block areas
@@ -163,7 +164,7 @@ def astar_search(crim_data, start, goal):
     # Iterate the open set
     while open_set:
         # Get the point with smallest fn as current node
-        current = sorted(open_set, key=lambda n: n.fn)[0]
+        current = min(open_set, key=lambda n: n.fn)
         print(current)
         # If reach to the destination, produce the path
         if current.is_equal(goal_point):
