@@ -57,6 +57,7 @@ class Node(object):
 # more importantly, avoid the convenience of unevenly distribution
 def astar_search(crim_data, start, goal):
     start_time = time.time()
+
     def if_add_open(current_node, child_node, g_path):
         # If child is in the open list, compare the new gn with stored gn
         if child_node.isopen:
@@ -149,7 +150,6 @@ def astar_search(crim_data, start, goal):
 
     # Get the boundary asix
     height, width = crim_data.shape
-    print(height, width)
     # Initialize all the nodes on the map
     nodes = [[Node([y, x]) for x in range(width+1)] for y in range(height+1)]
     # Create open set and close set
@@ -168,7 +168,7 @@ def astar_search(crim_data, start, goal):
         # If reach to the destination, produce the path
         if current.is_equal(goal_point):
             end_time = time.time()
-            print('Congratualations! The path is found, cost: ' + str(end_time-start_time) + 's')
+            print('Congratualations! The path is found in ' + str(end_time-start_time) + 's')
             return retrace_path(current)
 
         # Remove the current node from open set
@@ -263,6 +263,7 @@ def retrace_path(node):
         while node:
             yield node
             node = node.parent
+    # Store the coordinates only
     path = [ele.coord for ele in find_parent(node)]
     path.reverse()
     return path

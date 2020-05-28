@@ -1,6 +1,13 @@
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np
+import os
+
+
+# If the directory path don't exist, create one
+def create_dir(path):
+    if not os.path.isdir(path):
+        os.makedirs(path)
 
 
 def read_map():
@@ -42,14 +49,15 @@ def manipulate_data(boundaries, grid_size=0.002, threshold = 0.9):
 
 
 def show_grids(crim_data_binary, boundaries, grid_size, threshold, path=None):
-
     #plt.imshow(crim_data_binary, extent=boundaries, aspect='auto', origin='lower')
     x_ticks, y_ticks = get_tickers(boundaries, grid_size)
     plt.xticks(x_ticks)
     plt.yticks(y_ticks)
     plt.pcolor(x_ticks, y_ticks, crim_data_binary)
     plt.grid(b= True, axis='both', which='both')
-    grid_path = '../images/grids/grids_size' + str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
+    dir_path = "../images/grids/"
+    create_dir(dir_path)
+    grid_path = dir_path + 'grids_size' + str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
     if path:
         # xs = np.array(path[:, 1], dtype=float)
         # ys = np.array(path[:, 0], dtype=float)
@@ -58,7 +66,9 @@ def show_grids(crim_data_binary, boundaries, grid_size, threshold, path=None):
         # for i in range(len(ys)):
         #     ys[i] = y_ticks[int(ys)]
         plt.plot(path[0], path[1])
-        grid_path = '../images/paths/grids_size'+ str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
+        dir_path = '../images/paths/'
+        create_dir(dir_path)
+        grid_path = dir_path +'grids_size'+ str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
     plt.savefig(grid_path)
     plt.show()
 
