@@ -16,10 +16,10 @@ def read_map():
     return X, Y, total
 
 
-def get_tickers(boundaries, grid_size = 0.002):
+def get_tickers(boundaries, grid_size=0.002):
     # Compute grids, in case the grid_size cannot be divided evenly, plus half grad size is needed
-    x_axis = np.arange(boundaries[0], boundaries[1] + grid_size / 2, grid_size)
-    y_axis = np.arange(boundaries[2], boundaries[3] + grid_size / 2, grid_size)
+    x_axis = np.arange(boundaries[0], boundaries[1] + grid_size / 2, grid_size, dtype=float)
+    y_axis = np.arange(boundaries[2], boundaries[3] + grid_size / 2, grid_size, dtype=float)
     return x_axis, y_axis
 
 
@@ -27,7 +27,7 @@ def manipulate_data(boundaries, grid_size=0.002, threshold = 0.9):
     X, Y, total = read_map()
     x_axis, y_axis = get_tickers(boundaries, grid_size)
     # Create a 2d histogram to collect criminals
-    crim_data, _, _ = np.histogram2d(Y, X, bins = [y_axis, x_axis])
+    crim_data, _, _ = np.histogram2d(Y, X, bins=[y_axis, x_axis])
     # Compute the average
     mean = np.mean(crim_data)
     # Compute the standard deviation
@@ -41,15 +41,24 @@ def manipulate_data(boundaries, grid_size=0.002, threshold = 0.9):
     return crim_data_binary
 
 
-def show_grids(crim_data_binary, boundaries, grid_size, threshold):
-    # plt.pcolor(x_axis, y_axis, crim_data_binary)
-    plt.imshow(crim_data_binary, extent=boundaries, origin='lower')
-    # x_ticks = np.arange(-73.59, -73.55 + grid_size/2, grid_size)
-    # y_ticks = np.arange(45.49, 45.53 + grid_size/2, grid_size)
-    # plt.xticks(x_ticks)
-    # plt.yticks(y_ticks)
-    # plt.grid(b= True, which='both')
+def show_grids(crim_data_binary, boundaries, grid_size, threshold, path=None):
+
+    #plt.imshow(crim_data_binary, extent=boundaries, aspect='auto', origin='lower')
+    x_ticks, y_ticks = get_tickers(boundaries, grid_size)
+    plt.xticks(x_ticks)
+    plt.yticks(y_ticks)
+    plt.pcolor(x_ticks, y_ticks, crim_data_binary)
+    plt.grid(b= True, axis='both', which='both')
     grid_path = '../images/grids/grids_size' + str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
+    if path:
+        # xs = np.array(path[:, 1], dtype=float)
+        # ys = np.array(path[:, 0], dtype=float)
+        # for i in range(len(xs)):
+        #     xs[i] = x_ticks[int(xs)]
+        # for i in range(len(ys)):
+        #     ys[i] = y_ticks[int(ys)]
+        plt.plot(path[0], path[1])
+        grid_path = '../images/paths/grids_size'+ str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
     plt.savefig(grid_path)
     plt.show()
 
