@@ -1,4 +1,4 @@
-
+import time
 ''' Pseudo-code of A*
     open, close = [], []
     open.add(starting_point)
@@ -56,12 +56,13 @@ class Node(object):
 # Use indices of start point and end point, since it's easy to compute hn
 # more importantly, avoid the convenience of unevenly distribution
 def astar_search(crim_data, start, goal):
+    start_time = time.time()
     def if_add_open(current_node, child_node, g_path):
         # If child is in the open list, compare the new gn with stored gn
         if child_node.isopen:
             new_g = g_path + current_node.gn
             # If current gn is greater, update gn and fn with new gn
-            if child_node.gn >= new_g:
+            if child_node.gn > new_g:
                 child_node.gn = new_g
                 # compute the new fn
                 child_node.fn = child_node.gn + child_node.get_hn(goal)
@@ -163,10 +164,11 @@ def astar_search(crim_data, start, goal):
     while open_set:
         # Get the point with smallest fn as current node
         current = sorted(open_set, key=lambda n: n.fn)[0]
-        # print(current)
+        print(current)
         # If reach to the destination, produce the path
         if current.is_equal(goal_point):
-            print("Found!")
+            end_time = time.time()
+            print('Congratualations! The path is found, cost: ' + str(end_time-start_time))
             return retrace_path(current)
 
         # Remove the current node from open set
@@ -252,6 +254,7 @@ def astar_search(crim_data, start, goal):
                 g = upleft_gn(current)
                 if g:
                     if_add_open(current, up_left, g)
+    print("Due to blocks, no path is found. Please change the map and try again")
 
 
 def retrace_path(node):

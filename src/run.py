@@ -10,10 +10,10 @@ def run():
     crim_data = rm.manipulate_data(boundaries, grid_size, threshold)
     rm.show_grids(crim_data, boundaries, grid_size, threshold)
     # print(crim_data)
+
     path = np.array(aStar.astar_search(crim_data, [0, 0], [20, 20]), dtype=float)
 
     print(path)
-
     xs, ys = rm.get_tickers(boundaries, grid_size)
     x_axis = np.array(path[:, 1], dtype=float)
     y_axis = np.array(path[:, 0], dtype=float)
