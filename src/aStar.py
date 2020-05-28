@@ -165,11 +165,10 @@ def astar_search(crim_data, start, goal):
     while open_set:
         # Get the point with smallest fn as current node
         current = min(open_set, key=lambda n: n.fn)
-        print(current)
         # If reach to the destination, produce the path
         if current.is_equal(goal_point):
             end_time = time.time()
-            print('Congratualations! The path is found, cost: ' + str(end_time-start_time))
+            print('Congratualations! The path is found, cost: ' + str(end_time-start_time) + 's')
             return retrace_path(current)
 
         # Remove the current node from open set
@@ -256,6 +255,7 @@ def astar_search(crim_data, start, goal):
                 if g:
                     if_add_open(current, up_left, g)
     print("Due to blocks, no path is found. Please change the map and try again")
+    return 0
 
 
 def retrace_path(node):
