@@ -1,3 +1,9 @@
+# -----------------------------------------------------
+# Assignment 1
+# Written by Jinchen Hu - 40080398
+# For COMP 472 Section ABIX - Summer 2020
+# -----------------------------------------------------
+
 import matplotlib.pyplot as plt
 import geopandas as gpd
 import numpy as np

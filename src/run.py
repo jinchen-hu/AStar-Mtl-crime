@@ -1,3 +1,9 @@
+# -----------------------------------------------------
+# Assignment 1
+# Written by Jinchen Hu - 40080398
+# For COMP 472 Section ABIX - Summer 2020
+# -----------------------------------------------------
+
 import readMap as rm
 import numpy as np
 import aStar
