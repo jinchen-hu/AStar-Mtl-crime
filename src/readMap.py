@@ -51,6 +51,9 @@ def manipulate_data(boundaries, grid_size=0.002, threshold = 0.9):
     thre_value = linear_crim[int(np.floor(len(linear_crim) * (100 - threshold) / 100 -1))]
     # Transfer the elements to binary value according to the threshokld value
     crim_data_binary = (crim_data >= thre_value).astype(int)
+    print('mean: ' + str(mean))
+    print('std:' + str(std))
+    print(crim_data_binary)
     return crim_data_binary
 
 
