@@ -66,6 +66,7 @@ def show_grids(crim_data_binary, boundaries, grid_size, threshold, path=None):
     plt.grid(b= True, axis='both', which='both')
     dir_path = "../images/grids/"
     create_dir(dir_path)
+    click_points=[]
     grid_path = dir_path + 'grids_size' + str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
     if path:
         # xs = np.array(path[:, 1], dtype=float)
@@ -78,8 +79,12 @@ def show_grids(crim_data_binary, boundaries, grid_size, threshold, path=None):
         dir_path = '../images/paths/'
         create_dir(dir_path)
         grid_path = dir_path +'grids_size'+ str(grid_size) + '_threshold' + str(threshold / 100) + '.png'
+    else:
+        click_points = plt.ginput(2)
+        print(click_points)
     plt.savefig(grid_path)
     plt.show()
+    return click_points
 
 
 

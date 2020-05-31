@@ -108,6 +108,54 @@ def read_start_end(boundaries, grid_size):
             return [h0, w0], [h1, w1]
 
 
+def read_start_end_byClick(boundaries, grid_size, click_start, click_end):
+    while True:
+
+
+        start_point, end_point = click_start, click_end
+
+        long, lat = rm.get_tickers(boundaries, grid_size)
+        # Traverse the long array and lat array, find the proper indices
+        # for starting point and end point respectively
+        h0, h1, w0, w1, llat, llong = 0, 0, 0, 0, len(lat), len(long)
+        if start_point[1] == round(lat[llat-1], 10):
+            h0 = llat-1
+        else:
+            for h0 in range(llat-1):
+                if round(lat[h0], 10) <= start_point[1] < round(lat[h0+1], 10):
+                    break
+
+        if end_point[1] == round(lat[llat-1], 10):
+            h1 = llat-1
+        else:
+            for h1 in range(llat-1):
+                if round(lat[h1], 10) <= end_point[1] < round(lat[h1+1], 10):
+                    break
+
+        if start_point[0] == round(long[llong-1],10):
+            w0 = llong-1
+        else:
+            for w0 in range(llong-1):
+                if round(long[w0], 10) <= start_point[0] < round(long[w0+1], 10):
+                    break
+
+        if end_point[0] == round(long[llong-1], 10):
+            w1 = llong-1
+        else:
+            for w1 in range(llong - 1):
+                if round(long[w1], 10) <= end_point[0] < round(long[w1+1], 10):
+                    break
+
+        if h0 == h1 and w0 == w1:
+            print('Starting point is same as destination. Please input again')
+            continue
+        else:
+            print('\n\n')
+            print('The starting point and end point you chose (if not a intersection point, change it to the lowest point): ')
+            print(str([round(long[w0],10), round(lat[h0], 10)]) + ' ---> ' + str( [round(long[w1], 10),round(lat[h1], 10)]))
+            return [h0, w0], [h1, w1]
+
+
 def run():
     print('----------------------------------------------Welcome to FIND OPTIMAL PATH!---------------------------------------------------\n')
     print('The application will give you the optimal path reaching the destination from starting position, which avoids high-risk areas\n')
@@ -120,12 +168,16 @@ def run():
     threshold = read_threshold()
     crim_data = rm.manipulate_data(boundaries, grid_size, threshold)
     print('The map will show up immediately')
-    rm.show_grids(crim_data, boundaries, grid_size, threshold)
+    # rm.show_grids(crim_data, boundaries, grid_size, threshold)
+    point1, point2 = rm.show_grids(crim_data, boundaries, grid_size, threshold)
     print('\n\n')
     # -73.59, 45.49, -73.55, 45.53
     print('***********************************************************\n')
 
-    start_index, end_index = read_start_end(boundaries, grid_size)
+    # start_index, end_index = read_start_end(boundaries, grid_size)
+
+    start_index, end_index = read_start_end_byClick(boundaries, grid_size, point1, point2)
+
     path = []
 
     try:
